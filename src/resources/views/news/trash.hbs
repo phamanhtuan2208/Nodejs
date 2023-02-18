@@ -1,0 +1,164 @@
+<div class="mx-5">
+  <h3 class="my-3">Danh sách bài đăng đã xóa</h3>
+  <div class="row flex-row-reverse button-setting-all mx-5 my-3">
+    <a type="button" class="btn btn-primary btn-restore" href="" data-toggle="modal" data-target="#restoreAllModal" style="margin-left: 15px"
+      id="btn-restoreAll-news">Khôi Phục Tất Cả </a>
+    <a type="button" class="btn btn-danger" href="" data-toggle="modal" data-target="#deleteAllModal"
+      id="btn-deleteAll-news">Xóa Tất Cả Vĩnh Viễn </a>
+  </div>
+  <table class="table table-bordered table-hover" id="listtable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tên </th>
+        <th>Ngày bài viết </th>
+        <th>Link ảnh </th>
+        {{!-- <th>slug </th> --}}
+        <th>IDvideo </th>
+        <th>Thời gian tạo </th>
+        <th>Thời gian xóa </th>
+        <th>Sửa/Xóa? </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+      <tr>
+        <th scope="row">{{sum @index 1}}</th>
+        {{! dinh nghia trong index.js ham sum }}
+        <td>{{this.name}}</td>
+        <td>{{this.date}}</td>
+        <td>{{this.image}}</td>
+        {{!-- <td>{{this.slug}}</td> --}}
+        <td>{{this.IDvideo}}</td>
+        <td>{{this.updateAt}}</td>
+        <td>{{this.deleted}}</td>
+        <td>
+          <a type="button" class="btn btn-primary" href="" data-toggle="modal" data-target="#restoreModal"
+            data-restoremodel='{{this._id}}'>Khôi Phục </a>
+
+          {{! confirm update course }}
+          <div class="modal fade" id="restoreModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Khôi phục bài viết</h5>
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Bạn có muốn khôi phục bài viết này?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" href="" id="btn-restore-news">Khôi phục
+                  </button>
+                  <button type="button" class="btn btn-primary" href="" data-dismiss="modal">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a type="button" class="btn btn-danger" href="" data-toggle="modal" data-target="#deleteModal"
+            data-delete="{{this._id}}">Xóa vĩnh viễn
+          </a>
+          {{! confirm delete course }}
+
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Xóa</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Bạn có muốn xóa hoàn toàn khỏi thùng rác?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" href="" id="btn-delete-news">Xóa </button>
+                  <button type="button" class="btn btn-primary" href="" data-dismiss="modal">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {{else}}
+      {{!-- trả về giá trị cũ --}}
+      <tr>
+        <td colspan="8" class="text-center">
+          Bạn chưa xóa bài viết nào.
+          <a href="/news/listnews">danh sách bài viết</a>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+{{!-- hidden form --}}
+<form method="POST" id="restoreAll-form-trash" action=""></form>
+<form method="POST" id="deleteAll-form-trash" action=""></form>
+<form method="POST" id="restore-form-news" action=""></form>
+<form method="POST" id="delete-form-news" action=""></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+
+    var deleteID;
+    var btnDeleteNews = document.getElementById('btn-delete-news');
+    var deleteForm = document.forms['delete-form-news'];
+
+    var restoreID;
+    var btnRestoreNews = document.getElementById('btn-restore-news');
+    var restoreForm = document.forms['restore-form-news'];
+
+    //khi hộp thoại update được bấm (Varying modal content boststrap 4)
+    $('#restoreModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      restoreID = button.data('restoremodel') //data-id ở phần button delete, chỉ lấy kí tự id
+      console.log(restoreID);
+    });
+
+    btnRestoreNews.onclick = function () {
+      restoreForm.action = '/news/listnews/' + restoreID + '?_method=PATCH'
+      restoreForm.submit();
+    }
+
+    //khi hộp thoại delete được bấm (Varying modal content boststrap 4)
+    $('#deleteModal').on('show.bs.modal', function (event) {
+      var button2 = $(event.relatedTarget)
+      deleteID = button2.data('delete') //data-id ở phần button delete, chỉ lấy kí tự id
+      console.log(deleteID);
+    });
+
+    //console.log(btnDeleteNews);
+
+    btnDeleteNews.onclick = function () {
+      //alert(deleteID); //hiển thị thông báo đã xóa thành công
+      deleteForm.action = '/news/trash/' + deleteID + '?_method=DELETE'
+      deleteForm.submit();
+    }
+
+    document.getElementById('btn-restoreAll-news').onclick = function () {
+      document.forms['restoreAll-form-trash'].action = '/news/listnews'
+      document.forms['restoreAll-form-trash'].submit()
+    }
+
+    document.getElementById('btn-deleteAll-news').onclick = function () {
+      document.forms['deleteAll-form-trash'].action = '/news/trash?_method=DELETE'
+      document.forms['deleteAll-form-trash'].submit()
+    }
+
+    //tất cả các event nút thuộc class dưới sẽ được nằm trong console.log
+    //var restoreBtn = $('.btn-restore')
+  //  console.log(restoreBtn)
+   // restoreBtn.click(function(e){
+//console.log('button click')
+ //       e.preventDefault()
+    //    $(this).data('restoreAll');
+   //     console.log($(this).data('restoreAll')); //lấy id data từ data-restoreAll
+    //});
+  });
+</script>

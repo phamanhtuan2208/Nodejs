@@ -1,0 +1,24 @@
+expressjs
+morgan
+template engine
+static file & css (node-sass)
+
+coi ki phan Module va Controller
+
+tuy chon (prettier, lint-staged, husky) formmat code (hoc them phan put github)
+
+trang web: cham doc .doc nay de lam
+expressjs.com 4x
+handerbarjs
+mongoosejs 
+expresshanderbar
+morgan
+mongoose delete npm
+destructuring javascript
+
+
+method-override support method PUT and DELETE
+
+
+icon-b4:
+https://github.com/iconic/open-iconic

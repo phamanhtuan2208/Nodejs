@@ -1,0 +1,84 @@
+.card-pagenew {
+   margin-top: 30px
+}
+
+.margin-create {
+   margin-top: 30px
+}
+
+.user-avatar {
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   align-items: center;
+ }
+
+ #listtable {
+   font-family: Arial, Helvetica, sans-serif;
+   width: 100%;
+   border-collapse: collapse;
+   table-layout: fixed; 
+ }
+
+ table td { //break word line
+   word-wrap: break-word;         /* All browsers since IE 5.5+ */
+   overflow-wrap: break-word;     /* Renamed property in CSS3 draft spec */
+}
+ 
+ #listtable td, #customers th {
+   border: 1px solid #ddd;
+ }
+ 
+ #listtable tr:nth-child(even){background-color: #f2f2f2;}
+ 
+ #listtable tr:hover {background-color: #ddd;}
+ 
+ #listtable th {
+   text-align: left;
+   background-color: #04AA6D;
+   color: white;
+ }
+
+
+ .header-menu{
+  background-color: blue;
+  color: white;
+ }
+
+.logo-store {
+  height: 60px;
+  align-items: center;
+  width: inherit;
+}
+
+.cart {
+    margin-top: 10px;
+    margin-right: 20px;
+    color: white;
+    align-items: center;
+}
+
+.badge:after{
+  content:attr(value);
+  font-size:12px;
+  color: #fff;
+  background: red;
+  border-radius:50%;
+  padding: 0 5px;
+  position:relative;
+  left:-8px;
+  top:-10px;
+  opacity:0.9;
+}
+
+@media screen and (max-width: 810px){
+  .search-design .go{
+    margin-right: 200px;
+  }
+}
+
+
+
+#select-all-options {
+  width: 200px
+}

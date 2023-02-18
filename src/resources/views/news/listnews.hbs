@@ -1,0 +1,217 @@
+<form name="container-form" method="POST" action="/news/listnews/handle-form-action">
+  <div class="mx-5">
+    <h3 class="my-3">Danh sách bài đăng</h3>
+    {{!-- {{#if deletedCount}} --}}
+    <a href="/news/trash">thùng rác ({{deletedCount}})</a>
+    {{!-- {{/if}} --}}
+    <p></p>
+
+    <div class="form-check">
+      <input class="form-check-input CheckBox-all" type="checkbox" value="" id="CheckBox-all">
+      <label class="form-check-label" for="CheckBox-all">
+        Chọn tất cả
+      </label>
+    </div>
+
+    <div class="mt-4 d-flex align-items-center"></div>
+    <select class="custom-select" style="width:360px" name="action" required>
+      <option value="delete">Xóa</option>
+
+    </select>
+    <button type="button" class="disabled btn btn-primary btn-checked-All" data-dismiss="modal">Thực hiện</button>
+
+  </div>
+  <p></p>
+  <table class="table table-bordered table-hover" id="listtable">
+    <thead>
+      <tr>
+        <th></th>
+        <th>#</th>
+        <th>Tên {{{sortable 'name'_sort}}}</th>
+
+        <th>Ngày bài viết {{{sortable 'date'_sort}}}</th>
+
+        <th>Link ảnh </th>
+        {{!-- <th>slug </th> --}}
+        <th>IDvideo </th>
+        <th>Thời gian tạo {{{sortable 'updateAt'_sort}}}</th>
+        <th>Thời gian xóa </th>
+        <th>Sửa/Xóa? </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+      <tr>
+        <th scope="row">{{sum @index 1}}</th>
+        {{! dinh nghia trong index.js ham sum }}
+        <td>
+          <div class="form-check">
+
+            <input class="form-check-input submit-disable" type="checkbox" name="ObjectId[]" value='{{this._id}}'>
+            <label class="form-check-label" for="newsID"></label>
+            {{!-- [] mặc định mảng --}}
+          </div>
+        </td>
+        <td>{{this.name}}</td>
+        <td>{{this.date}}</td>
+        <td>{{this.image}}</td>
+        {{!-- <td>{{this.slug}}</td> --}}
+        <td>{{this.IDvideo}}</td>
+        <td>{{this.updateAt}}</td>
+        <td>{{this.deletedAt}}</td>
+        <td>
+          <a type="button" class="btn btn-primary" href="" data-toggle="modal" data-target="#updateModal"
+            data-updatemodel='{{this._id}}'>Sửa </a>
+
+          {{! confirm update course }}
+          <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Chỉnh sửa dữ liệu</h5>
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Bạn có muốn thay đổi?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" href="" id="btn-update-news">Thay đổi
+                  </button>
+                  <button type="button" class="btn btn-primary" href="" data-dismiss="modal">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a type="button" class="btn btn-danger" href="" data-toggle="modal" data-target="#deleteModal"
+            data-delete="{{this._id}}">Xóa
+          </a>
+          {{! confirm delete course }}
+
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Xóa dữ liệu</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Bạn có muốn xóa?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" href="" id="btn-delete-news">Xóa </button>
+                  <button type="button" class="btn btn-primary" href="" data-dismiss="modal">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {{else}}
+      {{!-- trả về giá trị cũ --}}
+      <tr>
+        <td colspan="9" class="text-center">
+          bạn chưa có bài viết nào.
+          <a href="/news/create">Tạo bài viết ngay</a>
+          <p></p>
+          <a href="/news/trash">Bài viết đã xóa, Khôi phục? đang có ({{deletedCount}})</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  </div>
+</form>
+{{!-- hidden form --}}
+<form method="GET" id="updateform-news" action=""></form>
+<form method="POST" id="delete-form-news" action=""></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+
+    var deleteID;
+    var btnDeleteNews = document.getElementById('btn-delete-news');
+    var deleteForm = document.forms['delete-form-news'];
+
+    var updateID;
+    var btnUpdateNews = document.getElementById('btn-update-news');
+    var updateForm = document.forms['updateform-news'];
+
+    var checkBoxAll = $('#CheckBox-all')
+    var coursesItemCheckbox = $('input[name="ObjectId[]"]');
+
+    var checkSubmit = $('.btn-checked-All')
+
+    var containerForm = document.forms['container-form'];
+
+    //khi hộp thoại update được bấm (Varying modal content boststrap 4)
+    $('#updateModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      updateID = button.data('updatemodel') //data-id ở phần button delete, chỉ lấy kí tự id
+      console.log(updateID);
+    });
+
+    btnUpdateNews.onclick = function () {
+      updateForm.action = '/news/' + updateID + '/edit'
+      updateForm.submit();
+    }
+
+    //khi hộp thoại delete được bấm (Varying modal content boststrap 4)
+    $('#deleteModal').on('show.bs.modal', function (event) {
+      var button2 = $(event.relatedTarget)
+      deleteID = button2.data('delete') //data-id ở phần button delete, chỉ lấy kí tự id
+      console.log(deleteID);
+    });
+
+    //console.log(btnDeleteNews);
+
+    btnDeleteNews.onclick = function () {
+      //alert(deleteID); //hiển thị thông báo đã xóa thành công
+      deleteForm.action = '/news/' + deleteID + '?_method=DELETE'
+      deleteForm.submit();
+    }
+
+    //checkbox all clicked
+    checkBoxAll.change(function () {
+      var isCheckedAll = $(this).prop('checked');
+      coursesItemCheckbox.prop('checked', isCheckedAll);
+      countCheckAll();
+    });
+
+    //courses item checkbox clicked change
+
+    coursesItemCheckbox.change(function () {
+      var isCheckedAll = coursesItemCheckbox.length === $('input[name="ObjectId[]"]:checked').length
+      checkBoxAll.prop('checked', isCheckedAll);
+      countCheckAll();
+    })
+
+    //check all submit button clicked
+    checkSubmit.click(function (e) {
+      e.preventDefault();
+
+      var isSubmitTable = !$(this).hasClass('disabled')
+      if (isSubmitTable) {
+        containerForm.submit();
+      }
+    });
+
+    //re render check all submit button
+    function countCheckAll() {
+      var checkedCount = $('input[name="ObjectId[]"]:checked').length;
+      if (checkedCount > 0) {
+        checkSubmit.removeClass("disabled");
+      }
+      else {
+        checkSubmit.addClass("disabled");
+      }
+    }
+
+
+  });
+</script>

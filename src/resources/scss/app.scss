@@ -1,0 +1,119 @@
+//thay doi css o cho nay
+//npm run watch
+@import 'variable';
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700);
+
+$blue: #6c757d ;
+
+*, div { box-sizing: border-box;}
+
+.container {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sw {
+  float: left;
+  width: 100%;
+  height: 100px;
+  background: $blue;
+  display: flex;
+  align-items: center;
+
+  
+  form {
+    // margin-left: 100px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .search {
+    flex: 1 1 auto;
+    order: 2;
+    outline: none;
+    border: none;
+    border-radius: 0;
+    background: #fff;
+    padding: 10px;
+    font-family: 'Roboto', sans-serif;
+    height: 40px;
+    transition: all 0.05s ease-in-out;
+    -webkit-appearance: none;
+    &:focus {
+      height: 60px;
+      margin-left: -15px;
+      padding: 10px 15px;
+      + .go {
+        height: 60px;
+        margin-right: -15px;
+        max-width: 60px; // Prevent icon from moving
+        color: $blue;
+        svg {
+          fill: black;
+        }
+        + a.logo {
+          visibility: hidden;
+          opacity: 0;
+          max-width: 0px;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  
+  .go {
+    flex: 1 1 auto;
+    order: 3;
+    max-width: 50px;
+    display: inline-block;
+    border: none;
+    background: #fff;
+    color: #ccc;
+    height: 40px;
+    transition: all 0.05s ease-in-out;
+    font-size: 21px;
+    outline: none;
+    svg {
+      width: 16px;
+      fill: #ccc;
+    }
+  }
+}
+
+.content {
+  float: left;
+  width: 100%;
+  clear: both;
+  padding: 15px;
+  text-align: center;
+  h1 {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    padding: 0;
+    font-size: 48px;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.02em;
+    margin-top: 50px 0 0 0;
+  }
+  p {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    a {
+      color: $blue;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  cite {
+    color: #aaa;
+  }
+}
+

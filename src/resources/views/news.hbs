@@ -1,0 +1,31 @@
+<style>
+  .card-pagenew {
+    margin-top: 50px;
+  }
+</style>
+
+
+<div class="row">
+  {{#each courses}}
+    <div class="col-1"></div>
+    <div class="">
+      <div class="card card-pagenew" style="width: 18rem;">
+        <a href="/news/{{this.slug}}">
+          <img class="card-img-top" src="{{this.image}}" alt="Card image cap" />
+        </a>
+        <div class="card-body">
+          <a href="/news/{{this.slug}}">
+            <h5 class="card-title">{{this.name}}</h5>
+          </a>
+          <p class="card-text">Some quick example text to build on the card
+            title and make up the bulk of the card's content.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">bao ngay: {{this.date}}</li>
+          <li class="list-group-item">ngay tao: {{this.createAT}}</li>
+          <li class="list-group-item">ngay update: {{this.updateAT}}</li>
+        </ul>
+      </div>
+    </div>
+  {{/each}}
+</div>
